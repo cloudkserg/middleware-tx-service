@@ -11,7 +11,11 @@ const senders = {
   [`${constants.blockchains.nem}`]: require('./sendNemTx'),
   [`${constants.blockchains.waves}`]: require('./sendWavesTx'),
 };
-
+/**
+ * 
+ * @param {String} blockchain 
+ * @returns {Function}
+ */
 module.exports = (blockchain) => {
   if (!senders[blockchain])
     throw new Error('Not found sender for blockchain ' + blockchain);

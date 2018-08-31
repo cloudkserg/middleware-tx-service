@@ -6,6 +6,12 @@
 const models = require('../models'),
   ethers = require('ethers'),
   constants = require('../config/constants')['blockchains'];
+  /**
+ * 
+ * @param {Object} txRaw 
+ * @param {String} address 
+ * @returns {txModel}
+ */
 module.exports = async (txRaw, address) => {
 
   const tx = ethers.Wallet.parseTransaction(txRaw);

@@ -10,7 +10,11 @@ const chains = require('../config/constants')['blockchains'],
     [`${chains.nem}`]: require('./createNemTx'),
     [`${chains.waves}`]: require('./createWavesTx'),
   };
-
+/**
+ * 
+ * @param {Sring} blockchainType
+ * @returns {Function}
+ */
 module.exports = (blockchainType) => {
   if (!types[blockchainType]) 
     throw new Error(`not found tx type ${blockchainType}`);

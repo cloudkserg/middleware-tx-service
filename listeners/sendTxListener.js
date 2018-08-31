@@ -36,6 +36,8 @@ const tryTxLater = async (tx, amqpService) => {
 
 /**
  * send Transaction
+ * 
+ * send transaction through node
  *
  * if error - publish msg with error msg
  * if success - publish msg with hash
@@ -73,11 +75,8 @@ module.exports = async (data, amqpService) => {
     await amqpService.publishTxOk(thisTx);
 
   } catch (e) {
-    console.log(e);
     log.error(e);
     await saveTxError(thisTx, e);
     return await amqpService.publishTxError(data, e.toString());
   }
-
-
 };

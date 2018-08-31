@@ -7,6 +7,11 @@ const Web3 = require('web3'),
   net = require('net'),
   Promise = require('bluebird');
 
+/**
+ * Instance for send though uri requests to node
+ * 
+ * @class EthInstance
+ */
 class EthInstance {
   constructor (uri) {
     this.instance = this._getConnectorFromURI(uri);

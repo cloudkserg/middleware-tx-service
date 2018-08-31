@@ -6,6 +6,12 @@
 const models = require('../models'),
   constants = require('../config/constants')['blockchains'];
 
+/**
+ * 
+ * @param {Object} txRaw 
+ * @param {String} address 
+ * @returns {txModel}
+ */
 module.exports = async (txRaw, address) => {
   const item = new models.txModel();
   item.blockchain = constants.nem;

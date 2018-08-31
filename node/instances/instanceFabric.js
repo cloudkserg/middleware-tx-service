@@ -10,7 +10,12 @@ const instances = {
   [`${constants.blockchains.nem}`]: require('./NemInstance'),
   [`${constants.blockchains.waves}`]: require('./WavesInstance'),
 };
-
+/**
+ * 
+ * @param {String} type 
+ * @param {String} uri 
+ * @returns {Object}
+ */
 module.exports = (type, uri) => {
   if (!type || !instances[type]) 
     throw new Error(`not found instance for type ${type}`);

@@ -6,7 +6,17 @@
 const createTxFabric = require('../tx/createTxFabric'),
   bunyan = require('bunyan'),
   log = bunyan.createLogger({name: 'tx-service'});
-
+/**
+ * 
+ * express handler of endpoint /tx/:blockchain
+ * with data = {tx, address}
+ * save this tx and db and send msg to rabbitmq
+ * 
+ * @param {String} blockchain 
+ * @param {Object} body [tx, address]
+ * @param {Object of Response} response 
+ * @param {AmqpService} amqpService 
+ */
 module.exports = async (blockchain, body, response, amqpService) => {
   try {
     const creator = createTxFabric(blockchain);

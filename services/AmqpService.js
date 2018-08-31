@@ -86,14 +86,12 @@ class AmqpService extends EventEmitter
   }
 
   async publishTxError (data, msg) {
-    console.log('ERRROR');
     const routing = `${this.serviceName}.${data.blockchain}.${data.address}.${data.order}`;
     await this.channel.publish(this.exchange, routing, 
       new Buffer(JSON.stringify({ok: false, order: data.order, msg})));
   }
 
   async publishTxOk (txModel) {
-    console.log('SUCCESS');
     const routing = `${this.serviceName}.${txModel.blockchain}.${txModel.address}.${txModel.order}`;
     await this.channel.publish(this.exchange, routing, 
       new Buffer(JSON.stringify({ok: true, hash: txModel.hash, order: txModel.order})));

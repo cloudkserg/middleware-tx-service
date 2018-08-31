@@ -3,9 +3,13 @@
  * Licensed under the AGPL Version 3 license.
  * @author Kirill Sergeev <cloudkserg11@gmail.com>
  */
-const Api = require('./api/wavesApi'),
-  Promise = require('bluebird');
+const Api = require('./api/wavesApi');
 
+/**
+ * Instance for send though uri requests to node
+ * 
+ * @class WavesInstance
+ */
 class WavesInstance {
   constructor (uri) {
     this.instance = this._getConnectorFromURI(uri);

@@ -5,6 +5,11 @@
  */
 const httpExec = require('./api/httpExec'),
   ipcExec = require('./api/ipcExec');
+/**
+ * Instance for send though uri requests to node
+ * 
+ * @class BitcoinInstance
+ */
 class BitcoinInstance {
   constructor (uri) {
     this.instance = this._getConnectorFromURI(uri);

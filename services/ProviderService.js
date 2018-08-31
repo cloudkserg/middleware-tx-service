@@ -57,7 +57,6 @@ class ProviderService extends EventEmitter {
       instance.disconnect();
       return provider;
     })).catch((e) => {
-      console.log(e);
       log.error(`no available connection for ${this.type}!`);
       process.exit(0);
     });

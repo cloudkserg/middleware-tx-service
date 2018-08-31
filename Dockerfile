@@ -14,5 +14,5 @@ RUN npm install -g chronobank-middleware --unsafe
 RUN mkdir src && cd src && \
     dmt init && \
     dmt install middleware-tx-service"#$RELEASE"
-EXPOSE 8080
+EXPOSE 8081
 CMD pm2-docker start /mnt/config/${NETWORK_TYPE}/ecosystem.config.js

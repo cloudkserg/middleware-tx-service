@@ -44,6 +44,6 @@ module.exports = {
     const connector = await providerService.get();
     const connection = await connector.instance.getConnection();
     const txObj = JSON.parse(txRaw);
-    return await connection.broadcast(txObj);
+    return await connection.broadcast(prepareTransaction(txObj));
   }
 };

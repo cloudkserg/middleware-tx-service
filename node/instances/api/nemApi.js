@@ -3,9 +3,8 @@
  * Licensed under the AGPL Version 3 license.
  * @author Kirill Sergeev <cloudkserg11@gmail.com>
  */
- const EventEmitter = require('events'),
+const EventEmitter = require('events'),
   Promise = require('bluebird'),
-  _ = require('lodash'),
   bunyan = require('bunyan'),
   log = bunyan.createLogger({name: 'tx-service.nemApi'}),
   request = require('request-promise'),
@@ -43,8 +42,8 @@ class Api {
 
     try {
       return await Promise.resolve(request(options)).timeout(10000);
-    }catch (e) {
-    	log.error(e);
+    } catch (e) {
+      log.error(e);
       await Promise.delay(1000);
       this.events.emit('disconnect');
       return null;
@@ -65,6 +64,10 @@ class Api {
     return data.height;
   }
 
+  async getTx (hash) {
+    return await this._makeRequest('transaction/get?hash=' + hash, 'GET');
+  }
+
 
   /**
    * @function
@@ -77,11 +80,11 @@ class Api {
   }
 
   async announce (tx) {
-  	return await request({
-  		uri: new URL('transaction/announce', this.http),
-  		method: 'POST',
-  		json: tx
-  	});
+    return await request({
+      uri: new URL('transaction/announce', this.http),
+      method: 'POST',
+      json: tx
+    });
   }
 
 }

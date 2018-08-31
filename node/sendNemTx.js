@@ -22,7 +22,7 @@ module.exports = {
     ).catch(e => {throw new Error(e);});
 
     if (!sendReply) 
-        throw new Error('not reply from announce');
+      throw new Error('not reply from announce');
 
     if (sendReply.code !== 0 && sendReply.code !== 1)
       throw new Error(sendReply.message);

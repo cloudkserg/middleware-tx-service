@@ -3,9 +3,12 @@
  * Licensed under the AGPL Version 3 license.
  * @author Kirill Sergeev <cloudkserg11@gmail.com>
  */
-const Api = require('./api/nemApi'),
-  Promise = require('bluebird');
-
+const Api = require('./api/nemApi');
+/**
+ * Instance for send though uri requests to node
+ * 
+ * @class NemInstance
+ */
 class NemInstance {
   constructor (uri) {
     this.instance = this._getConnectorFromURI(uri);
