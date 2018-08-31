@@ -9,7 +9,7 @@ const models = require('../../models'),
   _ = require('lodash'),
   expect = require('chai').expect,
   request = require('request-promise'),
-  wavesTx = require('./utils/wavesTx'),
+  wavesTx = require('../utils/wavesTx'),
   Promise = require('bluebird'),
   spawn = require('child_process').spawn;
 

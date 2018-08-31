@@ -5,10 +5,11 @@
  */
 const expect = require('chai').expect,
   EventEmitter = require('events'),
-  AmqpServer = require('../../../services/AmqpServer'),
+  AmqpService = require('../../../services/AmqpService'),
   Promise = require('bluebird'),
   config = require('../../config');
-  module.exports = (ctx) => {
+
+module.exports = (ctx) => {
 
   afterEach(async () => {
     if (ctx.amqp.queue)
@@ -18,22 +19,22 @@ const expect = require('chai').expect,
 
 
   it('construct without parameters - errors', async () => {
-    expect( function(){ new AmqpServer(); } ).to.throw();
+    expect( function () { new AmqpService(); } ).to.throw();
   });
 
 
   it('construct with right parameters', async () => {
-    const server = new AmqpServer(config.rabbit);
+    const server = new AmqpService(config.rabbit);
     expect(server.url).to.equal(config.rabbit.url);
     expect(server.exchange).to.equal(config.rabbit.exchange);
     expect(server.serviceName).to.equal(config.rabbit.serviceName);
     expect(server).instanceOf(EventEmitter);
-    expect(server).instanceOf(AmqpServer);
+    expect(server).instanceOf(AmqpService);
   });
 
 
   it('start() and close() - check that up', async () => {
-    const server = new AmqpServer(config.rabbit);
+    const server = new AmqpService(config.rabbit);
     await server.start();
 
     expect(server.amqpInstance.connection.stream._readableState.ended).to.equal(false);
@@ -46,7 +47,7 @@ const expect = require('chai').expect,
   it('addBind(routing) - check that bind on this and not another routing', async () => {
     const routing = 'routing';
 
-    const server = new AmqpServer(config.rabbit);
+    const server = new AmqpService(config.rabbit);
     await server.start();
     await server.addBind(routing);
 
@@ -71,7 +72,7 @@ const expect = require('chai').expect,
   it('delBind(routing) - connect to one, disconnect and connect to another - get only another', async () => {
     const routing = 'routing';
 
-    const server = new AmqpServer(config.rabbit);
+    const server = new AmqpService(config.rabbit);
     await server.start();
     await server.addBind('test');
     await server.delBind('test');

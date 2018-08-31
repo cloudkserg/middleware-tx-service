@@ -12,7 +12,7 @@
 const net = require('net'),
   Web3 = require('web3'),
   web3 = new Web3(),
-  config = require('./config'),
+  config = require('../config'),
   bunyan = require('bunyan'),
   fs = require('fs'),
   path = require('path'),

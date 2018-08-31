@@ -9,7 +9,7 @@ const models = require('../../models'),
   _ = require('lodash'),
   expect = require('chai').expect,
   request = require('request-promise'),
-  bitcoinTx = require('./utils/bitcoinTx'),
+  bitcoinTx = require('../utils/bitcoinTx'),
   Promise = require('bluebird'),
   spawn = require('child_process').spawn;
 

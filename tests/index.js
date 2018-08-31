@@ -20,7 +20,8 @@ const config = require('../config'),
   ctx = {};
 
 mongoose.Promise = Promise;
-mongoose.connect(config.mongo.url, {useNewUrlParser: true});
+mongoose.connect(config.mongo.data.uri, { useNewUrlParser: true});
+mongoose.set('useCreateIndex', true);
 
 describe('core/txService', function () {
 
@@ -41,9 +42,9 @@ describe('core/txService', function () {
   });
 
 
-  describe('block', () => blockTests(ctx));
+  // describe('block', () => blockTests(ctx));
   describe('features', () => featuresTests(ctx));
-  describe('fuzz', () => fuzzTests(ctx));
-  describe('performance', () => performanceTests(ctx));
+  // describe('fuzz', () => fuzzTests(ctx));
+  // describe('performance', () => performanceTests(ctx));
 
 });

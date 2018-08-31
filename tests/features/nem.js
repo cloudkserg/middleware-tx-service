@@ -8,7 +8,7 @@ const models = require('../../models'),
   config = require('../config'),
   expect = require('chai').expect,
   request = require('request-promise'),
-  nemTx = require('./utils/nemTx'),
+  nemTx = require('../utils/nemTx'),
   Promise = require('bluebird');
 
 

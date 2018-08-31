@@ -1,9 +1,9 @@
 const bcoin = require('bcoin'),
-  ProviderService = require('./services/ProviderService'),
+  ProviderService = require('../../services/ProviderService'),
   Network = require('bcoin/lib/protocol/network'),
-  constants = require('./config/constants').blockchains,
+  constants = require('../../config/constants').blockchains,
   _ = require('lodash'),
-  config = require('./config');
+  config = require('../config');
 
 const getConnection = async () => {
   const providerService = new ProviderService(

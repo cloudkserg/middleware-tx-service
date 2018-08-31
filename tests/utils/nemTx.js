@@ -1,7 +1,7 @@
-const ProviderService = require('./services/ProviderService'),
-  constants = require('./config/constants').blockchains,
+const ProviderService = require('../../services/ProviderService'),
+  constants = require('../../config/constants').blockchains,
   nem = require('nem-sdk').default,
-  config = require('./config');
+  config = require('../config');
 
 
 const signTransaction = async (connection, address) => {

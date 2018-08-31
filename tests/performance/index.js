@@ -12,8 +12,8 @@ const config = require('../config'),
   memwatch = require('memwatch-next'),
   expect = require('chai').expect,
   request = require('request-promise'),
-  bitcoinTx = require('./utils/bitcoinTx'),
-  ethTx = require('./utils/ethTx'),
+  bitcoinTx = require('../utils/bitcoinTx'),
+  ethTx = require('../utils/ethTx'),
   fs = require('fs-extra'),
   Promise = require('bluebird');
 

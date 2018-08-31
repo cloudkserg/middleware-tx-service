@@ -1,9 +1,9 @@
-const ProviderService = require('./services/ProviderService'),
-  constants = require('./config/constants').blockchains,
+const ProviderService = require('../../services/ProviderService'),
+  constants = require('../../config/constants').blockchains,
   Promise = require('bluebird'),
   ethers = require('ethers'),
   Tx = require('ethereumjs-tx'),
-  config = require('./config');
+  config = require('../config');
 
 
 const signTransaction = async (connection, address, nonce = null) => {

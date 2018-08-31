@@ -1,5 +1,5 @@
-const ProviderService = require('./services/ProviderService'),
-  constants = require('./config/constants').blockchains,
+const ProviderService = require('../../services/ProviderService'),
+  constants = require('../../config/constants').blockchains,
   amqp = require('amqplib'),
 
   _ = require('lodash'),
@@ -9,7 +9,7 @@ const ProviderService = require('./services/ProviderService'),
   Bytebuffer = require('bytebuffer'),
   curve25519 = require('axlsign'),
   Base58 = require('base58-native'),
-  config = require('./config');
+  config = require('../config');
 
 const stringToByteArray = (str) => {
   str = unescape(encodeURIComponent(str));
@@ -132,7 +132,7 @@ const signatureData = (tx) => {
     timestampBytes,
     amountBytes,
     feeBytes,
-    decodeRecipient, attachmentLength, attachment]).buffer,
+    decodeRecipient, attachmentLength, attachment]).buffer;
 };
 
 const sign = (privateKey, dataToSign) => {
@@ -143,24 +143,24 @@ const sign = (privateKey, dataToSign) => {
 
 const signTransaction = async (connection, address) => {
 
-    const tx = {
-      senderPublicKey: config.dev.waves.publicKey,
-      // An arbitrary address; mine, in this example
-      recipient: config.dev.waves.to,
-      // ID of a token, or WAVES
-      assetId: 'WAVES',
-      // The real amount is the given number divided by 10^(precision of the token)
-      amount: 10000000,
-      // The same rules for these two fields
-      feeAssetId: 'WAVES',
-      fee: 100000,
-      // 140 bytes of data (it's allowed to use Uint8Array here)
-      attachment: '',
-      timestamp: Date.now()
-    };
-    const signature = sign('', signatureData(tx));
-    return JSON.stringify(_.merge(tx, {signature}));
-}
+  const tx = {
+    senderPublicKey: config.dev.waves.publicKey,
+    // An arbitrary address; mine, in this example
+    recipient: config.dev.waves.to,
+    // ID of a token, or WAVES
+    assetId: 'WAVES',
+    // The real amount is the given number divided by 10^(precision of the token)
+    amount: 10000000,
+    // The same rules for these two fields
+    feeAssetId: 'WAVES',
+    fee: 100000,
+    // 140 bytes of data (it's allowed to use Uint8Array here)
+    attachment: '',
+    timestamp: Date.now()
+  };
+  const signature = sign('', signatureData(tx));
+  return JSON.stringify(_.merge(tx, {signature}));
+};
 
 
 const getAddress = () => {
