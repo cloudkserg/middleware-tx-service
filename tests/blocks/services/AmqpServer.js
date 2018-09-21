@@ -49,7 +49,7 @@ module.exports = (ctx) => {
 
     const server = new AmqpService(config.rabbit);
     await server.start();
-    await server.addBind(routing);
+    await server._addBind(routing);
 
     await Promise.all([
       (async () =>{
@@ -60,36 +60,8 @@ module.exports = (ctx) => {
           tx:124
         })));
       })(),
-      new Promise(res => server.on(server.MESSAGE, msg => {
-        expect(msg.routing).to.equal(routing);
-        expect(msg.data).to.deep.equal({tx: 124});
-        res();
-      }))
-    ]);
-    await server.close();
-  });
-
-  it('delBind(routing) - connect to one, disconnect and connect to another - get only another', async () => {
-    const routing = 'routing';
-
-    const server = new AmqpService(config.rabbit);
-    await server.start();
-    await server.addBind('test');
-    await server.delBind('test');
-    await server.addBind(routing);
-    await Promise.delay(1000);
-    await Promise.all([
-      (async () =>{
-        await ctx.amqp.channel.publish(config.rabbit.exchange, 'test', new Buffer(JSON.stringify({
-          tx:123
-        })));
-        await ctx.amqp.channel.publish(config.rabbit.exchange, routing, new Buffer(JSON.stringify({
-          tx:124
-        })));
-      })(),
-      new Promise(res => server.on(server.MESSAGE, msg => {
-        expect(msg.routing).to.equal(routing);
-        expect(msg.data).to.deep.equal({tx: 124});
+      new Promise(res => server.on(server.TX_SEND, msg => {
+        expect(msg).to.deep.equal({tx: 124});
         res();
       }))
     ]);
