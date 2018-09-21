@@ -1,0 +1,50 @@
+{
+  "name": "middleware_tx_service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@waves/waves-api": "^1.4.0",
+    "amqplib": "^0.5.2",
+    "base58-native": "^0.1.4",
+    "bitcoinjs-lib": "^4.0.1",
+    "bluebird": "^3.5.1",
+    "bunyan": "^1.8.12",
+    "bytebuffer": "^5.0.1",
+    "dotenv": "^4.0.0",
+    "ethereum-tx-decoder": "^2.0.1",
+    "ethereumjs-tx": "^1.3.7",
+    "express": "^4.16.3",
+    "fs-extra": "^7.0.0",
+    "helmet": "^3.13.0",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.2.9",
+    "nem-sdk": "^1.6.7",
+    "node-ipc": "^9.1.1",
+    "request-promise": "^4.2.2",
+    "require-all": "^3.0.0",
+    "semaphore": "^1.1.0",
+    "uniqid": "^5.0.3",
+    "web3": "^1.0.0-beta.35"
+  },
+  "scripts": {
+    "lint": "node ./node_modules/eslint/bin/eslint.js -c .eslintrc.js --ext .js --fix --ignore-path .eslintignore .",
+    "test": "node ./node_modules/mocha/bin/mocha -t 90000 tests"
+  },
+  "author": "chronobank",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ChronoBank/middleware-tx-service/issues"
+  },
+  "homepage": "https://github.com/ChronoBank/middleware-tx-service#readme",
+  "description": "Middleware tx service",
+  "devDependencies": {
+    "axlsign": "github:wavesplatform/curve25519-js",
+    "babel-eslint": "^8.2.6",
+    "bcoin": "1.0.0-beta.15",
+    "chai": "^4.1.1",
+    "eslint": "^4.19.1",
+    "eslint-plugin-chronobank": "github:chronobank/eslint-plugin-chronobank",
+    "memwatch-next": "^0.3.0",
+    "mocha": "^3.5.0"
+  }
+}
