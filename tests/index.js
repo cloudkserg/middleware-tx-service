@@ -31,7 +31,7 @@ describe('core/txService', function () {
     ctx.amqp.instance = await amqp.connect(config.rabbit.url);
     ctx.amqp.channel = await ctx.amqp.instance.createChannel();
     await ctx.amqp.channel.assertExchange(config.rabbit.exchange, 'topic', {durable: false});
-    ctx.serverPid = spawn('node', ['index.js'], {env: process.env, stdio: 'ignore'});
+    ctx.serverPid = spawn('node', ['index.js'], {env: process.env, stdio: 'inherit'});
     await Promise.delay(5000);
   });
 
@@ -42,9 +42,9 @@ describe('core/txService', function () {
   });
 
 
-  // describe('block', () => blockTests(ctx));
+  describe('block', () => blockTests(ctx));
   describe('features', () => featuresTests(ctx));
-  // describe('fuzz', () => fuzzTests(ctx));
-  // describe('performance', () => performanceTests(ctx));
+  describe('fuzz', () => fuzzTests(ctx));
+  describe('performance', () => performanceTests(ctx));
 
 });

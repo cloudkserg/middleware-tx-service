@@ -17,9 +17,10 @@ const models = require('../../models'),
 module.exports = (ctx) => {
 
   before (async () => {
-    await models.txModel.remove({});
+    await models.txModel.deleteMany({});
 
-    ctx.nodePid = spawn('node', ['tests/utils/bcoin/node.js'], {env: process.env, stdio: 'ignore'});
+
+    ctx.nodePid = spawn('node', ['tests/utils/bcoin/node.js'], {env: process.env, stdio: 'inherit'});
     await Promise.delay(10000);
   });
 
@@ -31,15 +32,14 @@ module.exports = (ctx) => {
 
     const nameQueue = 'test_tx_service_bitcoin_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange, 
       `${config.rabbit.serviceName}.bitcoin.${address}.*`
     );
 
     let order;
-
     await Promise.all([
       (async () => {
-        const response = await request('http://localhost:${config.http.port}/bitcoin', {
+        const response = await request(`http://localhost:${config.http.port}/bitcoin`, {
           method: 'POST',
           json: {
             tx: await bitcoinTx.signTransaction(connection, keyring), 
@@ -60,6 +60,9 @@ module.exports = (ctx) => {
             expect(message.ok).to.equal(true);
             expect(message.order).to.equal(order);
 
+            //after generate address
+            await bitcoinTx.afterTransaction(connection, keyring);
+
             const tx = await connection.execute('getrawtransaction', [message.hash]);
             expect(tx.hash).to.equal(message.hash);
             await ctx.amqp.channel.deleteQueue(nameQueue);
@@ -74,6 +77,7 @@ module.exports = (ctx) => {
   
 
   after ('kill environment', async () => {
+
     ctx.nodePid.kill();
   });
 

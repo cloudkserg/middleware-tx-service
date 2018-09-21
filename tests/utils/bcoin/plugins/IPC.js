@@ -24,9 +24,9 @@ class IPC {
 
     let pathIpc = path.join(this.config.ipcPath, `${ipc.config.appspace}${this.config.ipcName}`);
 
-    if (fs.existsSync(pathIpc)) {
+    if (fs.existsSync(pathIpc)) 
       fs.unlinkSync(pathIpc);
-    }
+    
 
     this.node.rpc.add('getcoinsbyaddress', async (...args) => {
       let coins = await this.node.getCoinsByAddress(...args);
@@ -38,24 +38,24 @@ class IPC {
     this.node.rpc.add('getmetabyaddress', this.node.getMetaByAddress.bind(this.node));
 
     ipc.serve(() => {
-        ipc.server.on('message', async (data, socket) => {
-          data = JSON.parse(data);
-          try {
-            const json = await this.node.rpc.execute(data);
-            ipc.server.emit(socket, 'message', {result: json, id: data.id});
-          } catch (e) {
-            ipc.server.emit(socket, 'message', {
-                id: data.id,
-                result: null,
-                error: {
-                  message: 'Invalid request.',
-                  code: RPCBase.errors.INVALID_REQUEST
-                }
-              }
-            );
+      ipc.server.on('message', async (data, socket) => {
+        data = JSON.parse(data);
+        try {
+          const json = await this.node.rpc.execute(data);
+          ipc.server.emit(socket, 'message', {result: json, id: data.id});
+        } catch (e) {
+          ipc.server.emit(socket, 'message', {
+            id: data.id,
+            result: null,
+            error: {
+              message: 'Invalid request.',
+              code: RPCBase.errors.INVALID_REQUEST
+            }
           }
-        });
-      }
+          );
+        }
+      });
+    }
     );
   }
 
@@ -75,6 +75,6 @@ module.exports = class IPCInitter {
     return {
       id: 'ipc',
       init: node => new IPC(node, config)
-    }
+    };
   }
 };

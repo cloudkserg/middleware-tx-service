@@ -18,7 +18,7 @@ const models = require('../../models'),
 module.exports = (ctx) => {
 
   before (async () => {
-    await models.txModel.remove({});
+    await models.txModel.deleteMany({});
   });
 
 
@@ -28,14 +28,14 @@ module.exports = (ctx) => {
 
     const nameQueue = 'test_tx_service_bitcoin_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange,
       `${config.rabbit.serviceName}.bitcoin.${address}.*`
     );
 
 
     await Promise.all([
       (async () => {
-        const response = await request('http://localhost:${config.http.port}/bitcoin', {
+        const response = await request(`http://localhost:${config.http.port}/bitcoin`, {
           method: 'POST',
           json: {
             tx: await bitcoinTx.signTransaction(null, keyring), 
@@ -65,13 +65,13 @@ module.exports = (ctx) => {
     const address = await ethTx.getAddress();
     const nameQueue = 'test_tx_service_eth_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange,
       `${config.rabbit.serviceName}.eth.${address}.*`
     );
 
     await Promise.all([
       (async () => {
-        const response = await request('http://localhost:${config.http.port}/eth', {
+        const response = await request(`http://localhost:${config.http.port}/eth`, {
           method: 'POST',
           json: {
             tx: await ethTx.signTransaction(null, address), 
@@ -108,13 +108,13 @@ module.exports = (ctx) => {
     const address = await ethTx.getAddress();
     const nameQueue = 'test_tx_service_eth_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange, 
       `${config.rabbit.serviceName}.eth.${address}.*`
     );
 
     await Promise.all([
       (async () => {
-        const response = await request('http://localhost:${config.http.port}/eth', {
+        const response = await request(`http://localhost:${config.http.port}/eth`, {
           method: 'POST',
           json: {
             tx: await ethTx.signTransaction(null, address, 2), 
@@ -146,13 +146,13 @@ module.exports = (ctx) => {
     const address = await wavesTx.getAddress();
     const nameQueue = 'test_tx_service_waves_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange,
       `${config.rabbit.serviceName}.nem.${address}.*`
     );
 
     await Promise.all([
       (async () => {
-        const response = await request('http://localhost:${config.http.port}/waves', {
+        const response = await request(`http://localhost:${config.http.port}/waves`, {
           method: 'POST',
           json: {
             tx: await wavesTx.signTransaction(null, address), 
