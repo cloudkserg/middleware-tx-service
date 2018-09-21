@@ -21,7 +21,7 @@ const config = require('../config'),
 module.exports = (ctx) => {
 
   before (async () => {
-    await models.txModel.remove({});
+    await models.txModel.deleteMany({});
   });
 
   it('validate memory for bitcoin 20 tx', async () => {
@@ -36,14 +36,14 @@ module.exports = (ctx) => {
 
     const nameQueue = 'test_tx_service_bitcoin_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange,
       `${config.rabbit.serviceName}.bitcoin.${address}.*`
     );
 
     await Promise.all([
       (async () => {
-        await Promise.map(_.range(0, 20), async (r) => {
-          await request('http://localhost:${config.http.port}/bitcoin', {
+        await Promise.map(_.range(0, 20), async () => {
+          await request(`http://localhost:${config.http.port}/bitcoin`, {
             method: 'POST',
             json: {
               tx: await bitcoinTx.signTransaction(connection, keyring), 
@@ -95,14 +95,14 @@ module.exports = (ctx) => {
 
     const nameQueue = 'test_tx_service_eth_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange, 
       `${config.rabbit.serviceName}.eth.${address}.*`
     );
 
     await Promise.all([
       (async () => {
-        await Promise.map(_.range(0, 20), async (r) => {
-          await request('http://localhost:${config.http.port}/eth', {
+        await Promise.map(_.range(0, 20), async () => {
+          await request(`http://localhost:${config.http.port}/eth`, {
             method: 'POST',
             json: {
               tx: await ethTx.signTransaction(connection, address), 
@@ -143,8 +143,8 @@ module.exports = (ctx) => {
     const connection = await bitcoinTx.getConnection();
 
     const start = Date.now();
-    await Promise.map(_.range(0, 50), async (r) => {
-      await request('http://localhost:${config.http.port}/bitcoin', {
+    await Promise.map(_.range(0, 50), async () => {
+      await request(`http://localhost:${config.http.port}/bitcoin`, {
         method: 'POST',
         json: {
           tx: await bitcoinTx.signTransaction(connection, keyring), 

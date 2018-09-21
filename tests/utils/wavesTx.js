@@ -1,11 +1,6 @@
 const ProviderService = require('../../services/ProviderService'),
   constants = require('../../config/constants').blockchains,
-  amqp = require('amqplib'),
-
   _ = require('lodash'),
-  Promise = require('bluebird'),
-  WavesAPI = require('@waves/waves-api'),
-  request = require('request-promise'),
   Bytebuffer = require('bytebuffer'),
   curve25519 = require('axlsign'),
   Base58 = require('base58-native'),
@@ -57,7 +52,7 @@ const intToBytes = (x, numBytes, unsignedMax, opt_bigEndian) => {
 };
 
 const int16ToBytes = (x, opt_bigEndian) => {
-  return intToBytes(x, 2, 65535, opt_bigEndian)
+  return intToBytes(x, 2, 65535, opt_bigEndian);
 };
 
 const bytesToByteArrayWithSize = (input) => {

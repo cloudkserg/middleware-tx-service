@@ -71,16 +71,16 @@ const main = async () => {
   await Promise.all([
     (async () => {
       await Promise.map(_.range(0, maxCount), async () => {
-      const response = await request('http://localhost:8082/bitcoin', {
-        method: 'POST',
-        json: {tx: await signTransaction(connection, keyring), address: keyring.getAddress().toString()}
-      });
+        const response = await request('http://localhost:8082/bitcoin', {
+          method: 'POST',
+          json: {tx: await signTransaction(connection, keyring), address: keyring.getAddress().toString()}
+        });
         //after generate address
-      await afterTransaction(connection, keyring);
-      if (response.ok == true)
-        console.log(`send tx ${response.order}`)
-      else
-        console.log('send with error', response);
+        await afterTransaction(connection, keyring);
+        if (response.ok == true)
+          console.log(`send tx ${response.order}`);
+        else
+          console.log('send with error', response);
       });
     })(),
     (async () => {

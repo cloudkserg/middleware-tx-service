@@ -17,7 +17,7 @@ const models = require('../../models'),
 module.exports = (ctx) => {
 
   before (async () => {
-    await models.txModel.remove({});
+    await models.txModel.deleteMany({});
     ctx.nodePid = spawn('java', ['-jar', 'tests/utils/waves/waves.jar', 'tests/utils/waves/waves-devnet.conf'], 
       {env: process.env, stdio: 'ignore'}
     );
@@ -31,7 +31,7 @@ module.exports = (ctx) => {
 
     const nameQueue = 'test_tx_service_waves_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange, 
       `${config.rabbit.serviceName}.waves.${address}.*`
     );
 
@@ -39,7 +39,7 @@ module.exports = (ctx) => {
 
     await Promise.all([
       (async () => {
-        const response = await request('http://localhost:${config.http.port}/waves', {
+        const response = await request(`http://localhost:${config.http.port}/waves`, {
           method: 'POST',
           json: {
             tx: await wavesTx.signTransaction(connection, address), 

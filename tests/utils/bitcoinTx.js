@@ -3,6 +3,7 @@ const bcoin = require('bcoin'),
   Network = require('bcoin/lib/protocol/network'),
   constants = require('../../config/constants').blockchains,
   _ = require('lodash'),
+  Promise = require('bluebird'),
   config = require('../config');
 
 const getConnection = async () => {
@@ -19,7 +20,7 @@ const generateKeyring = async () => {
   return new bcoin.keyring(keyPair.privateKey, network);
 };
 const afterTransaction = async (connection, keyring) => {
-  await connection.execute('generatetoaddress', [1, keyring.getAddress().toString()]).catch(console.error);
+  await connection.execute('generatetoaddress', [1, keyring.getAddress().toString()]);
 };
 
 const signTransaction = async (connection, keyring) => {
@@ -30,11 +31,13 @@ const signTransaction = async (connection, keyring) => {
   let keyring2 = new bcoin.keyring(keyPair2.privateKey, network);
   let coins = [];
   if (connection) {
-    await connection.execute('generatetoaddress', [60, keyring.getAddress().toString()]).catch(console.error);
-    await connection.execute('generatetoaddress', [60, keyring2.getAddress().toString()]).catch(console.error);
+    await connection.execute('generatetoaddress', [60, keyring.getAddress().toString()]);
+    await connection.execute('generatetoaddress', [100, keyring2.getAddress().toString()]);
+    await connection.execute('generatetoaddress', [100, keyring.getAddress().toString()]);
 
     coins = await connection.execute('getcoinsbyaddress', [keyring.getAddress().toString()]);
   }
+  await Promise.delay(1000);
   let inputCoins = _.chain(coins)
     .transform((result, coin) => {
       result.coins.push(bcoin.coin.fromJSON(coin));

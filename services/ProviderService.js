@@ -56,7 +56,7 @@ class ProviderService extends EventEmitter {
       await instance.getBlockCount();
       instance.disconnect();
       return provider;
-    })).catch((e) => {
+    })).catch(() => {
       log.error(`no available connection for ${this.type}!`);
       process.exit(0);
     });
