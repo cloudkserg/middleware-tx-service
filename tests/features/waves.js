@@ -18,10 +18,6 @@ module.exports = (ctx) => {
 
   before (async () => {
     await models.txModel.deleteMany({});
-    ctx.nodePid = spawn('java', ['-jar', 'tests/utils/waves/waves.jar', 'tests/utils/waves/waves-devnet.conf'], 
-      {env: process.env, stdio: 'ignore'}
-    );
-    await Promise.delay(10000);
   });
 
 
@@ -42,7 +38,7 @@ module.exports = (ctx) => {
         const response = await request(`http://localhost:${config.http.port}/waves`, {
           method: 'POST',
           json: {
-            tx: await wavesTx.signTransaction(connection, address), 
+            tx: await wavesTx.signTransaction(address, 1000, config.dev.waves.to), 
             address
           }
         });
@@ -59,8 +55,9 @@ module.exports = (ctx) => {
             expect(message.ok).to.equal(true);
             expect(message.order).to.equal(order);
 
-            const tx = await connection.getTx(message.hash);
-            expect(tx.id).to.equal(message.hash);
+            const txs = await connection.getUnconfirmedTxs();
+            const filterTxs = _.filter(txs, checkTx => checkTx.id === message.hash);
+            expect(filterTxs.length).to.eq(1);
             await ctx.amqp.channel.deleteQueue(nameQueue);
             res();
           }, {noAck: true});
@@ -70,7 +67,4 @@ module.exports = (ctx) => {
   });
 
 
-  after ('kill environment', async () => {
-    ctx.nodePid.kill();
-  });
 };

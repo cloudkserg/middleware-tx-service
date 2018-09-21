@@ -1,3 +1,4 @@
 node_modules/
+testrpc_db
 package-lock.json
 .env

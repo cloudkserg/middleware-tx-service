@@ -1,13 +1,17 @@
 const bcoin = require('bcoin'),
-  ProviderService = require('./services/ProviderService'),
+  ProviderService = require('../services/ProviderService'),
   Network = require('bcoin/lib/protocol/network'),
-  constants = require('./config/constants').blockchains,
+  MTX = require('bcoin/lib/primitives/mtx'),
+  Coin = require('bcoin/lib/primitives/coin'),
+  bcoinL = require('bcoin/lib/primitives'),
+  Script = require('bcoin/lib/script/script'),
+  constants = require('../config/constants').blockchains,
   amqp = require('amqplib'),
   request = require('request-promise'),
 
   _ = require('lodash'),
   Promise = require('bluebird'),
-  config = require('./config');
+  config = require('../config');
 
 const getConnection = async () => {
   const providerService = new ProviderService(
@@ -34,20 +38,23 @@ const signTransaction = async (connection, keyring) => {
   const keyPair2 = bcoin.hd.generate(network);
 
   let keyring2 = new bcoin.keyring(keyPair2.privateKey, network);
-  await connection.execute('generatetoaddress', [60, keyring.getAddress().toString()]).catch(console.error);
-  await connection.execute('generatetoaddress', [60, keyring2.getAddress().toString()]).catch(console.error);
+  await connection.execute('generatetoaddress', [101, keyring.getAddress().toString()]).catch(console.error);
+  await connection.execute('generatetoaddress', [101, keyring2.getAddress().toString()]).catch(console.error);
+
+const b = await connection.execute('getmempoolinfo');
 
   let coins = await connection.execute('getcoinsbyaddress', [keyring.getAddress().toString()]);
   let inputCoins = _.chain(coins)
+    .take(1)
     .transform((result, coin) => {
-      result.coins.push(bcoin.coin.fromJSON(coin));
+      result.coins.push(Coin.fromJSON(coin));
       result.amount += coin.value;
     }, {amount: 0, coins: []})
     .value();
-  const mtx = new bcoin.mtx();
+  const mtx = new MTX();
   mtx.addOutput({
     address: keyring2.getAddress(),
-    value: Math.round(inputCoins.amount * 0.2)
+    value: Math.round(inputCoins.amount * 0.1)
   });
   await mtx.fund(inputCoins.coins, {
     rate: 10000,
@@ -55,6 +62,7 @@ const signTransaction = async (connection, keyring) => {
   });
   mtx.sign(keyring);
   const tx = mtx.toTX();
+
   return tx.toRaw().toString('hex');
 };
 
@@ -66,16 +74,20 @@ const main = async () => {
 
   const keyring = await generateKeyring();
   const connection = await getConnection();
-  const maxCount = 10;
+  const maxCount = 1;
 
   await Promise.all([
     (async () => {
+        console.log(_.range(0, maxCount));
       await Promise.map(_.range(0, maxCount), async () => {
+        console.log('before');
+        await connection.execute('generatetoaddress', [100, keyring.getAddress().toString()]).catch(console.error);
         const response = await request('http://localhost:8082/bitcoin', {
           method: 'POST',
           json: {tx: await signTransaction(connection, keyring), address: keyring.getAddress().toString()}
         });
         //after generate address
+        console.log('send');
         await afterTransaction(connection, keyring);
         if (response.ok == true)
           console.log(`send tx ${response.order}`);
@@ -94,7 +106,8 @@ const main = async () => {
             r++;
             console.log(`get hash ${message.order}=${message.hash}`);
 
-            //const tx = await connection.execute('getrawtransaction', [message.hash]);
+            const tx = await connection.execute('getrawtransaction', [message.hash]);
+			console.log('success=' + ((!tx || tx.length === 0) ? tx : 'success'));
             if (r === maxCount)
               res();
           }

@@ -21,21 +21,6 @@ function removeRecipientPrefix (original) {
     return original;
 }
 
-const prepareTransaction = (tx) => {
-  return {
-    transactionType: null, //'transfer',
-    senderPublicKey: tx.senderPublicKey,
-    assetId: tx.assetId === 'WAVES' ? null : tx.assetId,
-    feeAsset: tx.feeAssetId === 'WAVES' ? null : tx.feeAssetId,
-    timestamp: tx.timestamp,
-    amount: tx.amount,
-    fee: tx.fee || MINIMUM_FEE,
-    recipient: removeRecipientPrefix(tx.recipient),
-    attachment: tx.attachment,
-    signature: tx.signature
-  };
-};
-
 module.exports = {
   isNodeReadyForOrder: async () => {
     return true;
@@ -43,7 +28,7 @@ module.exports = {
   sendTx: async (txRaw) => {
     const connector = await providerService.get();
     const connection = await connector.instance.getConnection();
-    const txObj = JSON.parse(txRaw);
-    return await connection.broadcast(prepareTransaction(txObj));
+    const resultTx = await connection.broadcast(txRaw);
+    return resultTx.id;
   }
 };

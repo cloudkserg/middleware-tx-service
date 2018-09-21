@@ -22,7 +22,7 @@ module.exports = (ctx) => {
     await fs.remove('testrpc_db');
     ctx.nodePid = spawn('node', ['--max_old_space_size=4096', 'tests/utils/ipcConverter.js'], {
       env: process.env,
-      stdio: 'ignore'
+      stdio: 'inherit'
     });
     await Promise.delay(5000);
   });
@@ -59,6 +59,7 @@ module.exports = (ctx) => {
             if (!data) 
               return;
             const message = JSON.parse(data.content);
+console.log(message);
             expect(message.ok).to.equal(true);
             expect(message.order).to.equal(order);
 
