@@ -53,8 +53,9 @@ module.exports = (ctx) => {
             expect(message.ok).to.equal(true);
             expect(message.order).to.equal(order);
 
-            const tx = await connection.getTx(message.hash);
-            expect(tx.hash).to.equal(message.hash);
+            
+            const tx = await connection.getUnconfirmedTransaction(address, message.hash);
+            expect(tx && tx.timeStamp > 0).to.eq(true);
             await ctx.amqp.channel.deleteQueue(nameQueue);
             res();
           }, {noAck: true});

@@ -86,6 +86,10 @@ class Api {
   async getTx (id) {
     return await this._makeRequest('transactions/info/' + id);
   }
+  
+  async getUnconfirmedTxs() {
+    return await this._makeRequest('/transactions/unconfirmed');
+  }
 
 }
 

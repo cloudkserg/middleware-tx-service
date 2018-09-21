@@ -4,6 +4,8 @@ const bcoin = require('bcoin'),
   constants = require('../../config/constants').blockchains,
   _ = require('lodash'),
   Promise = require('bluebird'),
+  MTX = require('bcoin/lib/primitives/mtx'),
+  Coin = require('bcoin/lib/primitives/coin'),
   config = require('../config');
 
 const getConnection = async () => {
@@ -29,25 +31,23 @@ const signTransaction = async (connection, keyring) => {
   const keyPair2 = bcoin.hd.generate(network);
 
   let keyring2 = new bcoin.keyring(keyPair2.privateKey, network);
-  let coins = [];
-  if (connection) {
-    await connection.execute('generatetoaddress', [60, keyring.getAddress().toString()]);
-    await connection.execute('generatetoaddress', [100, keyring2.getAddress().toString()]);
-    await connection.execute('generatetoaddress', [100, keyring.getAddress().toString()]);
+  await connection.execute('generatetoaddress', [101, keyring.getAddress().toString()]).catch(console.error);
+  await connection.execute('generatetoaddress', [101, keyring2.getAddress().toString()]).catch(console.error);
 
-    coins = await connection.execute('getcoinsbyaddress', [keyring.getAddress().toString()]);
-  }
-  await Promise.delay(1000);
+const b = await connection.execute('getmempoolinfo');
+
+  let coins = await connection.execute('getcoinsbyaddress', [keyring.getAddress().toString()]);
   let inputCoins = _.chain(coins)
+    .take(1)
     .transform((result, coin) => {
-      result.coins.push(bcoin.coin.fromJSON(coin));
+      result.coins.push(Coin.fromJSON(coin));
       result.amount += coin.value;
     }, {amount: 0, coins: []})
     .value();
-  const mtx = new bcoin.mtx();
+  const mtx = new MTX();
   mtx.addOutput({
     address: keyring2.getAddress(),
-    value: Math.round(inputCoins.amount * 0.2)
+    value: Math.round(inputCoins.amount * 0.1)
   });
   await mtx.fund(inputCoins.coins, {
     rate: 10000,
@@ -55,6 +55,7 @@ const signTransaction = async (connection, keyring) => {
   });
   mtx.sign(keyring);
   const tx = mtx.toTX();
+
   return tx.toRaw().toString('hex');
 };
 

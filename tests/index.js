@@ -31,7 +31,7 @@ describe('core/txService', function () {
     ctx.amqp.instance = await amqp.connect(config.rabbit.url);
     ctx.amqp.channel = await ctx.amqp.instance.createChannel();
     await ctx.amqp.channel.assertExchange(config.rabbit.exchange, 'topic', {durable: false});
-    ctx.serverPid = spawn('node', ['index.js'], {env: process.env, stdio: 'inherit'});
+    ctx.serverPid = spawn('node', ['index.js'], {env: process.env, stdio: 'ignore'});
     await Promise.delay(5000);
   });
 

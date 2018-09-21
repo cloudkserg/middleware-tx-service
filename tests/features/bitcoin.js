@@ -62,9 +62,10 @@ module.exports = (ctx) => {
 
             //after generate address
             await bitcoinTx.afterTransaction(connection, keyring);
-
+            
+            await Promise.delay(1000);
             const tx = await connection.execute('getrawtransaction', [message.hash]);
-            expect(tx.hash).to.equal(message.hash);
+            expect(tx && tx.length > 0).to.eq(true);
             await ctx.amqp.channel.deleteQueue(nameQueue);
             res();
           }, {noAck: true});

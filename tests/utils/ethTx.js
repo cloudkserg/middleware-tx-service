@@ -18,7 +18,7 @@ const signTransaction = async (connection, address, nonce = null) => {
 
   const privateKeyHex = new Buffer(privateKey, 'hex');
   const rawTx = {
-    nonce: nonce+1,
+    nonce: nonce === 0 ? nonce: nonce+1,
     from: address,
     gas:100000,
     to: address1,

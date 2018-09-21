@@ -86,6 +86,10 @@ class Api {
       json: tx
     });
   }
+  async getUnconfirmedTransaction (address, hash) {
+    const data = await this._makeRequest('account/unconfirmedTransactions?address=' + address + '&hash=' + hash);
+    return data.data[0].transaction;
+  }
 
 }
 
