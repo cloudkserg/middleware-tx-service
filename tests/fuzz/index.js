@@ -105,7 +105,6 @@ module.exports = (ctx) => {
         });
       })()
     ]);
-    ctx.nodePid.kill();
   });
 
 
