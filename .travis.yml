@@ -21,13 +21,13 @@ install:
   - npm install
 
 script:
-  - npm test -- --coverage
+  - sleep 200 && npm test -- --coverage
 
 after_success:
   - FULL_GCR_KEY="-----BEGIN PRIVATE KEY-----\n"$GCR_KEY"\n-----END PRIVATE KEY-----\n"
   - sed -i -e "s%\PWD%$FULL_GCR_KEY%g" gcregistry.json
   - docker login -u _json_key -p "$(cat gcregistry.json)" https://gcr.io
-  - rm -rf gcregistry.json
+   rm -rf gcregistry.json
   - |
     if [ "$TRAVIS_TAG" == "" ]; then
       IMAGE_TAG_NAME="latest"
