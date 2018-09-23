@@ -44,7 +44,7 @@ describe('core/txService', function () {
 
   describe('block', () => blockTests(ctx));
   describe('fuzz', () => fuzzTests(ctx));
-  describe('features', () => featuresTests(ctx));
   describe('performance', () => performanceTests(ctx));
+  describe('features', () => featuresTests(ctx));
 
 });
