@@ -43,17 +43,6 @@ module.exports = (ctx) => {
     tx = 'bad+bad+bad+bad'; 
     await Promise.all([
       (async () => {
-        const response = await request(`http://localhost:${config.http.port}/bitcoin`, {
-          method: 'POST',
-          json: {
-            tx,
-            address
-          }
-        });
-        //after generate address
-        expect(response.ok).to.equal(false);
-      })(),
-      (async () => {
         await new Promise(res => {
           ctx.amqp.channel.consume(nameQueue, async (data) => {
             if (!data) 
@@ -65,6 +54,17 @@ module.exports = (ctx) => {
             res();
           }, {noAck: true});
         });
+      })(),
+      (async () => {
+        const response = await request(`http://localhost:${config.http.port}/bitcoin`, {
+          method: 'POST',
+          json: {
+            tx,
+            address
+          }
+        });
+        //after generate address
+        expect(response.ok).to.equal(false);
       })()
     ]);
   });

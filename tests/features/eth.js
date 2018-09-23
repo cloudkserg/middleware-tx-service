@@ -22,7 +22,7 @@ module.exports = (ctx) => {
     await fs.remove('testrpc_db');
     ctx.nodePid = spawn('node', ['--max_old_space_size=4096', 'tests/utils/ipcConverter.js'], {
       env: process.env,
-      stdio: 'inherit'
+      stdio: 'ignore'
     });
     await Promise.delay(5000);
   });

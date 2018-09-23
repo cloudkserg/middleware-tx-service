@@ -20,7 +20,7 @@ module.exports = (ctx) => {
     await models.txModel.deleteMany({});
 
 
-    ctx.nodePid = spawn('node', ['tests/utils/bcoin/node.js'], {env: process.env, stdio: 'inherit'});
+    ctx.nodePid = spawn('node', ['tests/utils/bcoin/node.js'], {env: process.env, stdio: 'ignore'});
     await Promise.delay(10000);
   });
 
