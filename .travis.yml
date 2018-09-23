@@ -19,7 +19,7 @@ before_script:
     - echo "NEM_PROVIDERS=http://192.3.61.243:7890" >> .env
     - echo "WAVES_PROVIDERS=http://localhost:6869" >> .env
     - echo "REST_PORT=8082" >> .env
-    - cd $TRAVIS_BUILD_DIR/tests/utils/node && java -jar waves.jar waves-devnet.conf > /dev/null &
+    - cd $TRAVIS_BUILD_DIR/tests/utils/waves && java -jar waves.jar waves-devnet.conf > /dev/null &
     - sleep 100
 
 install:
