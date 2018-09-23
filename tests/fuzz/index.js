@@ -48,7 +48,6 @@ module.exports = (ctx) => {
             if (!data) 
               return;
             const message = JSON.parse(data.content);
-              console.log(message);
             expect(message.ok).to.equal(false);
 
             await ctx.amqp.channel.deleteQueue(nameQueue);
@@ -63,7 +62,7 @@ module.exports = (ctx) => {
             tx,
             address
           }
-        });
+        }).catch(e => { return {ok: false}; });
         //after generate address
         expect(response.ok).to.equal(false);
       })()
