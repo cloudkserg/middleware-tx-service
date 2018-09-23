@@ -20,7 +20,7 @@ before_script:
     - echo "WAVES_PROVIDERS=http://localhost:6869" >> .env
     - echo "REST_PORT=8082" >> .env
     - cd $TRAVIS_BUILD_DIR/tests/utils/waves && java -jar waves.jar waves-devnet.conf > /dev/null &
-    - sleep 100
+    - sleep 50
 
 install:
   - npm install
