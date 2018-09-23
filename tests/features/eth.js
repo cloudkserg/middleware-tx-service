@@ -59,7 +59,6 @@ module.exports = (ctx) => {
             if (!data) 
               return;
             const message = JSON.parse(data.content);
-console.log(message);
             expect(message.ok).to.equal(true);
             expect(message.order).to.equal(order);
 

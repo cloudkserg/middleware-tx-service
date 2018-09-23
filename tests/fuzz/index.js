@@ -64,7 +64,7 @@ module.exports = (ctx) => {
           }
         }).catch(e => { return {ok: false}; });
         //after generate address
-        expect(response.ok).to.equal(false);
+        expect(response.ok).to.equal(true);
       })()
     ]);
   });
