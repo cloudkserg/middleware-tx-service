@@ -34,7 +34,7 @@ module.exports = (ctx) => {
     const keyring = await bitcoinTx.generateKeyring();
     const address = keyring.getAddress().toString();
 
-    const nameQueue = 'test_tx_service_bitcoin_feature'; 
+    const nameQueue = 'test_tx_service_bitcoin_feature_1'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
     await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange,
       `${config.rabbit.serviceName}.bitcoin.${address}.*`
@@ -48,6 +48,7 @@ module.exports = (ctx) => {
             if (!data) 
               return;
             const message = JSON.parse(data.content);
+              console.log(message);
             expect(message.ok).to.equal(false);
 
             await ctx.amqp.channel.deleteQueue(nameQueue);
