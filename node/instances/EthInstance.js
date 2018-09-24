@@ -36,12 +36,15 @@ class EthInstance {
 
   async isConnected () {
     return await new Promise((res, rej) => {
-      this.web3.sendAsync({
-        id: 9999999999,
-        jsonrpc: '2.0',
-        method: 'net_listening',
-        params: []
-      }, (err, result) => err ? rej(err) : res(result.result));
+      if (this.web3.sendAsync)
+        this.web3.sendAsync({
+            id: 9999999999,
+            jsonrpc: '2.0',
+            method: 'net_listening',
+            params: []
+        }, (err, result) => err ? rej(err) : res(result.result));
+      else
+        res();
     });
   }
 

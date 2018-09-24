@@ -70,6 +70,8 @@ module.exports = async (data, amqpService) => {
     }
     
     const hash = await sender.sendTx(thisTx.raw);
+    if (!hash)
+        throw new Error('Not found hash from node');
     await saveTxSuccess(thisTx, hash);
     await failSameTx(data);
     await amqpService.publishTxOk(thisTx);

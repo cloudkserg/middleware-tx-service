@@ -72,6 +72,10 @@ class AmqpService extends EventEmitter
     });
   }
 
+  async _delBind (routing) {
+    await this.channel.cancel(`${routing}`);
+  }
+
 
   async _publish (msg) {
     await this.channel.publish(this.exchange, this.serviceName, 
@@ -105,7 +109,8 @@ class AmqpService extends EventEmitter
    * @memberOf AmqpServer
    */
   async close () {
-    if (this._onClosed && this.channel)
+    await this._delBind(this.serviceName);
+    if (this._onClosed)
       this.channel.removeListener('close', this._onClosed);
     await this.amqpInstance.close();
   }
