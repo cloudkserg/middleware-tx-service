@@ -42,7 +42,7 @@ module.exports = {
       providers: parseProviders(process.env.NEM_PROVIDERS, ['http://192.3.61.243:7890'])
     },
     [`${constants.blockchains.waves}`]: {
-      providers: parseProviders(process.env.WAVES_PROVIDERS, ['/tmp/bitcoin'])
+      providers: parseProviders(process.env.WAVES_PROVIDERS, ['http://localhost:6869'])
     },
   }
 };
