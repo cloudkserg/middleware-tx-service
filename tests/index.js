@@ -42,9 +42,9 @@ describe('core/txService', function () {
   });
 
 
-  // describe('block', () => blockTests(ctx));
+  describe('block', () => blockTests(ctx));
+  describe('fuzz', () => fuzzTests(ctx));
   describe('features', () => featuresTests(ctx));
-  // describe('fuzz', () => fuzzTests(ctx));
-  // describe('performance', () => performanceTests(ctx));
+  describe('performance', () => performanceTests(ctx));
 
 });

@@ -10,7 +10,7 @@ const bitcoinTests = require('./bitcoin'),
 
 module.exports = (ctx) => {
   describe('bitcoin', () => bitcoinTests(ctx));
-  // describe('eth', () => ethTests(ctx));
-  // describe('nem', () => nemTests(ctx));
-  // describe('waves', () => wavesTests(ctx));
+  describe('eth', () => ethTests(ctx));
+  describe('nem', () => nemTests(ctx));
+  describe('waves', () => wavesTests(ctx));
 };

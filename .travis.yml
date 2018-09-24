@@ -14,6 +14,13 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install python2.7 git-all pkg-config libncurses5-dev libssl-dev libnss3-dev libexpat-dev libc6-dev openjdk-8-jre -y
 
+before_script:
+    - echo "BITCOIN_PROVIDERS=http://127.0.0.1:18332" >> .env
+    - echo "NEM_PROVIDERS=http://192.3.61.243:7890" >> .env
+    - echo "WAVES_PROVIDERS=http://localhost:6869" >> .env
+    - echo "REST_PORT=8082" >> .env
+    - cd $TRAVIS_BUILD_DIR/tests/utils/waves && java -jar waves.jar waves-devnet.conf > /dev/null &
+    - sleep 50
 
 install:
   - npm install
@@ -25,7 +32,7 @@ after_success:
   - FULL_GCR_KEY="-----BEGIN PRIVATE KEY-----\n"$GCR_KEY"\n-----END PRIVATE KEY-----\n"
   - sed -i -e "s%\PWD%$FULL_GCR_KEY%g" gcregistry.json
   - docker login -u _json_key -p "$(cat gcregistry.json)" https://gcr.io
-  - rm -rf gcregistry.json
+   rm -rf gcregistry.json
   - |
     if [ "$TRAVIS_TAG" == "" ]; then
       IMAGE_TAG_NAME="latest"

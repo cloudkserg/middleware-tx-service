@@ -1,7 +1,7 @@
 # middleware-tx-service [![Build Status](https://travis-ci.org/ChronoBank/middleware-tx-service.svg?branch=master)](https://travis-ci.org/ChronoBank/middleware-tx-service)
 
 Middleware service for sending transactions
-
+ 
 ### Installation
 
 This module is a part of middleware services. You can install it in 2 ways:

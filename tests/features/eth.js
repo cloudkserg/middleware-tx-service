@@ -17,7 +17,7 @@ const models = require('../../models'),
 module.exports = (ctx) => {
 
   before (async () => {
-    await models.txModel.remove({});
+    await models.txModel.deleteMany({});
 
     await fs.remove('testrpc_db');
     ctx.nodePid = spawn('node', ['--max_old_space_size=4096', 'tests/utils/ipcConverter.js'], {
@@ -34,7 +34,7 @@ module.exports = (ctx) => {
 
     const nameQueue = 'test_tx_service_eth_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange,
       `${config.rabbit.serviceName}.eth.${address}.*`
     );
 
@@ -42,7 +42,7 @@ module.exports = (ctx) => {
 
     await Promise.all([
       (async () => {
-        const response = await request('http://localhost:${config.http.port}/eth', {
+        const response = await request(`http://localhost:${config.http.port}/eth`, {
           method: 'POST',
           json: {
             tx: await ethTx.signTransaction(connection, address), 

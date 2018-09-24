@@ -18,6 +18,8 @@ config.dev = {
     address: '3JfE6tjeT7PnpuDQKxiVNLn4TJUFhuMaaT5',
     key: 'FYLXp1ecxQ6WCPD4axTotHU9RVfPCBLfSeKx1XSCyvdT',
     publicKey: 'GbGEY3XVc2ohdv6hQBukVKSTQyqP8rjQ8Kigkj6bL57S',
+    http: 'http://localhost:6869',
+    apiKey: 'password',  
     to: '3Jk2fh8aMBmhCQCkBcUfKBSEEa3pDMkDjCr'
   }
 };

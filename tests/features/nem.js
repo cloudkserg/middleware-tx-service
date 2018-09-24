@@ -15,7 +15,7 @@ const models = require('../../models'),
 module.exports = (ctx) => {
 
   before (async () => {
-    await models.txModel.remove({});
+    await models.txModel.deleteMany({});
   });
 
 
@@ -25,7 +25,7 @@ module.exports = (ctx) => {
 
     const nameQueue = 'test_tx_service_nem_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
-    await ctx.amqp.channel.bindQueue('test_addr', 'events', 
+    await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange, 
       `${config.rabbit.serviceName}.nem.${address}.*`
     );
 
@@ -33,7 +33,7 @@ module.exports = (ctx) => {
 
     await Promise.all([
       (async () => {
-        const response = await request('http://localhost:${config.http.port}/nem', {
+        const response = await request(`http://localhost:${config.http.port}/nem`, {
           method: 'POST',
           json: {
             tx: await nemTx.signTransaction(connection, address), 
@@ -53,8 +53,9 @@ module.exports = (ctx) => {
             expect(message.ok).to.equal(true);
             expect(message.order).to.equal(order);
 
-            const tx = await connection.getTx(message.hash);
-            expect(tx.hash).to.equal(message.hash);
+            
+            const tx = await connection.getUnconfirmedTransaction(address, message.hash);
+            expect(tx && tx.timeStamp > 0).to.eq(true);
             await ctx.amqp.channel.deleteQueue(nameQueue);
             res();
           }, {noAck: true});
