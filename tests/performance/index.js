@@ -44,7 +44,7 @@ module.exports = (ctx) => {
       `${config.rabbit.serviceName}.eth.${address}.*`
     );
     const tx = await ethTx.signTransaction(connection, address);
-    const max = 10;
+    const max = 1;
     await Promise.all([
       (async () => {
         await Promise.map(_.range(0, max), async () => {
@@ -94,7 +94,7 @@ module.exports = (ctx) => {
     const connection = await ethTx.getConnection();
 
     const start = Date.now();
-    await Promise.map(_.range(0, 50), async () => {
+    await Promise.map(_.range(0, 1), async () => {
       await request(`http://localhost:${config.http.port}/eth`, {
         method: 'POST',
         json: {
