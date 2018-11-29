@@ -11,11 +11,8 @@ const ProviderService = require('../services/ProviderService'),
 const providerService = new ProviderService(constants.blockchains.eth, providers);
 
 module.exports = {
-  isNodeReadyForOrder: async (address, order) => {
-    const connector = await providerService.get();
-    const connection = connector.instance.getConnection();
-    const curOrder = await Promise.promisify(connection.eth.getTransactionCount)(address).timeout(10000);
-    return (curOrder >= order);
+  isNodeReadyForOrder: async () => {
+    return true;
   },
   sendTx: async (raw) => {
     const connector = await providerService.get();

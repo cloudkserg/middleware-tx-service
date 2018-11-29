@@ -8,6 +8,7 @@ module.exports = {
     bitcoin: 'bitcoin',
     eth: 'eth',
     nem: 'nem',
+    eos: 'eos',
     waves: 'waves'
   }
 };

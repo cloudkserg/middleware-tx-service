@@ -9,6 +9,7 @@ const chains = require('../config/constants')['blockchains'],
     [`${chains.eth}`]: require('./createEthTx'),
     [`${chains.nem}`]: require('./createNemTx'),
     [`${chains.waves}`]: require('./createWavesTx'),
+    [`${chains.eos}`]: require('./createEosTx')
   };
 /**
  * 

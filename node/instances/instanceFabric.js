@@ -9,6 +9,7 @@ const instances = {
   [`${constants.blockchains.eth}`]: require('./EthInstance'),
   [`${constants.blockchains.nem}`]: require('./NemInstance'),
   [`${constants.blockchains.waves}`]: require('./WavesInstance'),
+  [`${constants.blockchains.eos}`]: require('./EosInstance'),
 };
 /**
  * 

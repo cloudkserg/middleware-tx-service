@@ -21,6 +21,13 @@ config.dev = {
     http: 'http://localhost:6869',
     apiKey: 'password',  
     to: '3Jk2fh8aMBmhCQCkBcUfKBSEEa3pDMkDjCr'
+  },
+  eos: {
+    http: 'http://jungle2.cryptolions.io:80',
+    httpForGetTransaction: 'https://junglehistory.cryptolions.io:4433/v1/history/get_transaction'
+    address: 'chronobank21',
+    key: '5KXQPYAncmiPpM6Zwugw3xsJ48bbt2qd4TthseRTpbMtZsfjWP1',
+    to: 'chronobank54'
   }
 };
 

@@ -9,6 +9,7 @@ const senders = {
   [`${constants.blockchains.bitcoin}`]: require('./sendBitcoinTx'),
   [`${constants.blockchains.eth}`]: require('./sendEthTx'),
   [`${constants.blockchains.nem}`]: require('./sendNemTx'),
+  [`${constants.blockchains.eos}`]: require('./sendEosTx'),
   [`${constants.blockchains.waves}`]: require('./sendWavesTx'),
 };
 /**

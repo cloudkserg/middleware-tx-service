@@ -1,14 +1,9 @@
-# middleware-tx-service [![Build Status](https://travis-ci.org/ChronoBank/middleware-tx-service.svg?branch=master)](https://travis-ci.org/ChronoBank/middleware-tx-service)
+# middleware-tx-service 
+Middleware service for handling signing process
 
-Middleware service for sending transactions
- 
 ### Installation
 
-This module is a part of middleware services. You can install it in 2 ways:
-
-1) through core middleware installer  [middleware installer](https://github.com/ChronoBank/middleware)
-2) by hands: just clone the repo, do 'npm install', set your .env - and you are ready to go
-
+Just make ```npm install``` and you are ready to go.
 
 #### About
 This module is used for sending transactions. This happens through the layer, which on built on express.
@@ -17,10 +12,12 @@ This module get hex of tx (hex view of tx object) for selected blockchain and se
 
 #### How does it work?
 
+In order to start using it, you first need to install [auth-service](https://gitlab.chronobank.io/chronobank/middleware-auth-service.git).
+
 Tx send service open endpoint http://localhost:{port}/:blockchain for post requests.
 
 ```
-blockchain = bitcoin|eth|nem|waves
+blockchain = bitcoin|eth|nem|waves|eos
 port = REST_PORT from config
 ```
 
@@ -33,7 +30,7 @@ Response:
 where order = order in database for this transaction
 ```
 
-Example for bitcoin request:
+#### Example for bitcoin request:
 ```
 POST http://localhost:8081/bitcoin
 body: {
@@ -46,7 +43,7 @@ tx - hex of signed bitcoin transaction (mtx.toTX().toRaw().toString('hex'))
 address - from address  for bitcoin transaction (keyring.getAddress().toString())
 ```
 
-Example for eth request:
+#### Example for eth request:
 ```
 POST http://localhost:8081/eth
 body: {tx: 0x010000000199363a7e27973843aaae9ea7056417302ec3b9ecabed3ae3e90cdcd1a52326b5000000006a4730440220, address: 0x293433453435345}
@@ -56,7 +53,7 @@ tx - hex of signed eth transaction (with 0x) from '0x' + tx.serialize().toString
 address - from address  for eth transaction
 ```
 
-Example for nem request:
+#### Example for nem request:
 ```
 POST http://localhost:8081/nem
 body: {tx: {"data":"010100000100006037876e06200000008e997e65732dd0fe1c141fd86a83a41834e2f3971d20e08131469696e6a9fb23a086010000000000b7d86f0628000000544158374f55484d51535444584f4d594a494b4846494c524b4f4c565947454347343746504b47510a000000000000000d000000010000000500000048656c6c6f","signature":"8ee196c14b7f645b5f80c6189fd0d23a897ec7f8d2d8a3528ab06a251f107cbebe555fa3dbcbd67f5d5ee2b0f2ffff76faee8eab46f7f7ac96713bee608b8a0c"}, address: 0x293433453435345}
@@ -69,7 +66,7 @@ tx - JSON.stringify of object {data, signature}
 address - from address  for nem transaction
 ```
 
-Example for waves request:
+#### Example for waves request:
 ```
 POST http://localhost:8081/waves
 body: {tx: tx, address: 0x293433453435345}
@@ -91,10 +88,25 @@ tx - JSON.stringify of waves transaction [for comments see waves documentation -
 address - from address  for waves transaction
 ```
 
+#### Example for eos request:
+```
+POST http://localhost:8081/waves
+body: {tx: {serializedTransaction: '0d42005c35003c9ff71a000000000100a6823403ea3055000000572d3ccdcd01000000000020e95d00000000a8ed32322c000000000020e95d00000000000000cd940400000000000004454f53000000000b68656c6c6f20776f726c6400', signatures: ['SIG_K1_K8ewx7HN4T55tZ47dtdDzmxNRPPuiFy6cbaGig3MZJZ2MyP9UUi5Qki5iNZ52azvDSrkpAReTMy3cADrb9HdSRd9sdkufP' ]}, address: chronobank21}
+where 
+tx - JSON.stringify of eos transaction 
+{
+    transaction: 'sdfsfsd', //packed and serialized transaction
+    signatures: ['sdfsdfsdf'] //signatures
+}
+address - from address  for eos transaction
+```
+
+##### Rabbit mq responses 
+
 After get response, tx in background send to blockchain.
 This may finished with two situations.
 
-1 Success
+##### 1 Success
 We get rabbitmq message 
 with routing = ```serviceName.blockchain.address.order```  
 on exchange ```exchange```
@@ -110,7 +122,7 @@ message = ```{ok: true, hash: hash}```
     hash = hash transaction in blockchain
 ```
 
-2 Failure
+##### 2 Failure
 We get rabbitmq message 
 with routing = ```serviceName.blockchain.address.order```  
 on exchange ```exchange```
@@ -138,6 +150,8 @@ Below is the expamle configuration:
 RABBIT_URI=amqp://localhost:5672
 ETH_PROVIDERS=http://localhost:8545
 BITCOIN_PROVIDERS=/tmp/bitcoin
+WAVES_PROVIDERS=http://localhost:6869
+EOS_PROVIDERS=http://jungle2.cryptolions.io:80
 REST_PORT=8082
 ```
 
@@ -155,6 +169,7 @@ The options are presented below:
 | BITCOIN_PROVIDERS   | the paths to http/ip bitcoin interface, written with comma sign
 | NEM_PROVIDERS   | the paths to http/ipc nem interface, written with comma sign
 | WAVES_PROVIDERS   | the paths to http waves interface, written with comma sign
+| EOS_PROVIDERS   | the paths to http eos url providers, written with comma sign
 | WAIT_ORDER_TIME | the time where we wait the skipped transaction in order
 
 

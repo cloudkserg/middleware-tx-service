@@ -8,8 +8,8 @@
 const ProviderService = require('../services/ProviderService'),
   constants = require('../config/constants'),
   config = require('../config'),
-  providers = config.node[`${constants.blockchains.waves}`].providers;
-const providerService = new ProviderService(constants.blockchains.waves, providers);
+  providers = config.node[`${constants.blockchains.eos}`].providers;
+const providerService = new ProviderService(constants.blockchains.eos, providers);
 
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
   sendTx: async (txRaw) => {
     const connector = await providerService.get();
     const connection = await connector.instance.getConnection();
-    const resultTx = await connection.broadcast(txRaw);
-    return resultTx.id;
+    const resultTx = await connection.pushTransaction(txRaw.serializedTransaction, txRaw.signatures);
+    return resultTx.transaction_id;
   }
 };

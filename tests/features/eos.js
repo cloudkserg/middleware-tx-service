@@ -6,10 +6,9 @@
 
 const models = require('../../models'),
   config = require('../config'),
-  _ = require('lodash'),
   expect = require('chai').expect,
   request = require('request-promise'),
-  wavesTx = require('../utils/wavesTx'),
+  eosTx = require('../utils/eosTx'),
   Promise = require('bluebird');
 
 
@@ -20,24 +19,24 @@ module.exports = (ctx) => {
   });
 
 
-  it('connect to server and send normal waves tx', async () => {
-    const address = await wavesTx.getAddress();
-    const connection = await wavesTx.getConnection();
+  it('connect to server and send normal eos tx', async () => {
+    const address = await eosTx.getAddress();
+    const connection = await eosTx.getConnection();
 
-    const nameQueue = 'test_tx_service_waves_feature'; 
+    const nameQueue = 'test_tx_service_nem_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
     await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange, 
-      `${config.rabbit.serviceName}.waves.${address}.*`
+      `${config.rabbit.serviceName}.eos.${address}.*`
     );
 
     let order;
 
     await Promise.all([
       (async () => {
-        const response = await request(`http://localhost:${config.http.port}/waves`, {
+        const response = await request(`http://localhost:${config.http.port}/eos`, {
           method: 'POST',
           json: {
-            tx: await wavesTx.signTransaction(address, 1000, config.dev.waves.to), 
+            tx: await eosTx.signTransaction(connection, address), 
             address
           }
         });
@@ -54,9 +53,9 @@ module.exports = (ctx) => {
             expect(message.ok).to.equal(true);
             expect(message.order).to.equal(order);
 
-            const txs = await connection.getUnconfirmedTxs();
-            const filterTxs = _.filter(txs, checkTx => checkTx.id === message.hash);
-            expect(filterTxs.length).to.eq(1);
+            
+            const tx = await eosTx.getTransaction(message.hash);
+            expect(tx && tx.block_num != '').to.eq(true);
             await ctx.amqp.channel.deleteQueue(nameQueue);
             res();
           }, {noAck: true});
@@ -65,5 +64,7 @@ module.exports = (ctx) => {
     ]);
   });
 
+
+  
 
 };

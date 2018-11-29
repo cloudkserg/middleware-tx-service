@@ -13,7 +13,7 @@ const Tx = new mongoose.Schema({
   created: {type: Date, required: true, default: Date.now},
   blockchain: {type: String, index: true, required: true},
   address: {type: String, index: true, required: true},
-  hash: {type:String, index: true},
+  hash: {type:String, index: true}, //hash or error
   order: {type: Number, index: true, required: true}
 });
 
