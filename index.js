@@ -44,8 +44,8 @@ mongoose.connect(config.mongo.data.uri, { useNewUrlParser: true});
 mongoose.set('useCreateIndex', true);
   
 const init = async () => {
-  // if (config.system.checkSystem)
-  //   await runSystem();
+   if (config.system.checkSystem)
+     await runSystem();
 
   [mongoose.connection].forEach(connection =>
     connection.on('disconnected', () => {
@@ -66,11 +66,11 @@ const init = async () => {
   const app = express();
   app.use(helmet());
   app.use(express.json());
-  // const auth = authLib.authMiddleware({
-  //   serviceId: config.id,
-  //   provider: config.oauthService.url
-  // });
-  // app.use(auth);
+   const auth = authLib.authMiddleware({
+     serviceId: config.id,
+     provider: config.oauthService.url
+   });
+   app.use(auth);
 
   app.post('/:blockchain', async (request, response) => {
     await handlers.sendTxHandler(
