@@ -23,7 +23,7 @@ module.exports = (ctx) => {
     const address = await eosTx.getAddress();
     const connection = await eosTx.getConnection();
 
-    const nameQueue = 'test_tx_service_nem_feature'; 
+    const nameQueue = 'test_tx_service_eos_feature'; 
     await ctx.amqp.channel.assertQueue(nameQueue, {autoDelete: true, durable: false, noAck: true});
     await ctx.amqp.channel.bindQueue(nameQueue, config.rabbit.exchange, 
       `${config.rabbit.serviceName}.eos.${address}.*`
@@ -36,7 +36,7 @@ module.exports = (ctx) => {
         const response = await request(`http://localhost:${config.http.port}/eos`, {
           method: 'POST',
           json: {
-            tx: await eosTx.signTransaction(connection, address), 
+            tx: await eosTx.signTransaction(config.dev.eos.address, '0.0001', config.dev.eos.to), 
             address
           }
         });
@@ -54,6 +54,8 @@ module.exports = (ctx) => {
             expect(message.order).to.equal(order);
 
             
+              console.log(message.hash);
+              await Promise.delay(8000);
             const tx = await eosTx.getTransaction(message.hash);
             expect(tx && tx.block_num != '').to.eq(true);
             await ctx.amqp.channel.deleteQueue(nameQueue);

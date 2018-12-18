@@ -37,7 +37,7 @@ const signTransaction = async (fromAddress, amount, toAddress) => {
   };
 };
 
-const getTransaction = (id) => {
+const getTransaction = async (id) => {
     return await request({
         uri: `${config.dev.eos.httpForGetTransaction}/${id}`,
         method: 'GET',
